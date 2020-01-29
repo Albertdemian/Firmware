@@ -70,6 +70,8 @@ public:
 	ZeroOrderHoverThrustEkf() = default;
 	~ZeroOrderHoverThrustEkf() = default;
 
+	void resetAccelNoise() { _R = 5.f; };
+
 	void predict(float _dt);
 	status fuseAccZ(float acc_z, float thrust);
 

@@ -43,6 +43,9 @@ void HoverThrustEstimator::reset()
 {
 	_thrust = 0.f;
 	_acc_z = 0.f;
+	_hover_thrust_ekf.setHoverThrustStdDev(_param_hte_ht_err_init.get());
+	_hover_thrust_ekf.resetAccelNoise();
+
 }
 
 void HoverThrustEstimator::updateParams()

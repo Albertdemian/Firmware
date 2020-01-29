@@ -47,8 +47,16 @@ void HoverThrustEstimator::reset()
 
 void HoverThrustEstimator::updateParams()
 {
+	const float ht_err_init_prev = _param_hte_ht_err_init.get();
+	ModuleParams::updateParams();
+
 	_hover_thrust_ekf.setProcessNoiseStdDev(_param_hte_ht_noise.get());
-	_hover_thrust_ekf.setMeasurementNoiseStdDev(_param_hte_acc_noise.get());
+
+	if (fabsf(_param_hte_ht_err_init.get() - ht_err_init_prev) > FLT_EPSILON) {
+		_hover_thrust_ekf.setHoverThrustStdDev(_param_hte_ht_err_init.get());
+	}
+
+	_hover_thrust_ekf.setAccelInnovGate(_param_hte_acc_gate.get());
 }
 
 void HoverThrustEstimator::update(const float dt)

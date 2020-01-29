@@ -72,8 +72,11 @@ public:
 
 	void predict(float _dt);
 	status fuseAccZ(float acc_z, float thrust);
+
 	void setProcessNoiseStdDev(float process_noise) { _Q = process_noise * process_noise; }
 	void setMeasurementNoiseStdDev(float measurement_noise) { _R = measurement_noise * measurement_noise; }
+	void setHoverThrustStdDev(float hover_thrust_noise) { _P = hover_thrust_noise * hover_thrust_noise; }
+	void setAccelInnovGate(float gate_size) { _gate_size = gate_size; }
 
 	float getHoverThrustEstimate() const { return _hover_thr; }
 
@@ -81,9 +84,9 @@ private:
 	float _hover_thr{0.5f};
 
 	float _gate_size{3.f};
-	float _P{0.01f};
-	float _Q{0.01f};
-	float _R{0.5f};
+	float _P{0.01f}; // Initial hover thrust uncertainty variance (thrust^2)
+	float _Q{0.25e-6f}; // Hover thrust process noise (thrust^2/s^2)
+	float _R{5.f}; // Acceleration variance (m^2/s^3)
 	float _dt{0.02f};
 
 	float computeH(float thrust) const;
@@ -91,6 +94,12 @@ private:
 	float computePredictedAccZ(float thrust) const;
 	float computeInnov(float acc_z, float thrust) const;
 	float computeKalmanGain(float H, float innov_var) const;
+
+	/*
+	 * Compute the ratio between the Normalized Innovation Squared (NIS)
+	 * and its maximum gate size. Use isTestRatioPassing to know if the
+	 * measurement should be fused or not.
+	 */
 	float computeInnovTestRatio(float innov, float innov_var) const;
 	bool isTestRatioPassing(float innov_test_ratio) const;
 

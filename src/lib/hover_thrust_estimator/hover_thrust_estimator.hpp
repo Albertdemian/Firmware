@@ -78,7 +78,8 @@ private:
 
 	DEFINE_PARAMETERS(
 		(ParamFloat<px4::params::HTE_HT_NOISE>) _param_hte_ht_noise,
-		(ParamFloat<px4::params::HTE_ACC_NOISE>) _param_hte_acc_noise
+		(ParamFloat<px4::params::HTE_ACC_GATE>) _param_hte_acc_gate,
+		(ParamFloat<px4::params::HTE_HT_ERR_INIT>) _param_hte_ht_err_init
 	)
 
 	uORB::Publication<hover_thrust_estimator_s> _hover_thrust_ekf_pub{ORB_ID(hover_thrust_estimator)};
